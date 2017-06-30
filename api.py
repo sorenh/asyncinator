@@ -13,15 +13,18 @@
 # limitations under the License.
 import json
 
-from flask import Flask, request
+from flask import Flask, request, Response
 
 import tasks
 
 app = Flask(__name__)
 
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['GET', 'POST'])
 def root():
+    if request.method == 'GET':
+        return Response(open('README.md', 'r'), mimetype='text/plain')
+
     for arg in ['method', 'url', 'callback']:
         if arg not in request.form:
             return 'You must provide method, url, and callback', 400
