@@ -34,5 +34,6 @@ def root():
                          json.loads(request.form.get('headers', '[]')),
                          request.form.get('body', None),
                          request.form['callback'],
-                         'insecure' in request.form)
+                         'insecure' in request.form,
+                         request.form.get('salt'))
     return res.id, 201

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from celery import Celery
+from hashlib import sha512
 
 import requests
 
@@ -21,12 +22,16 @@ app = Celery('tasks', broker=utils.redis_broker_url())
 
 
 @app.task(ignore_result=True, bind=True)
-def do(self, method, url, headers, body, callback, insecure):
+def do(self, method, url, headers, body, callback, insecure, salt=None):
     func = getattr(requests, method.lower())
     resp = func(url, headers=headers, data=body, verify=not insecure)
-    requests.post(callback,
-                  json={'task': self.request.id,
-                        'status': '%s %s' % (resp.status_code, resp.reason),
-                        'headers': dict(resp.headers),
-                        'body': resp.content}, verify=not insecure)
+    data = {'task': self.request.id,
+            'status': '%s %s' % (resp.status_code, resp.reason),
+            'headers': dict(resp.headers),
+            'body': resp.content}
+
+    if salt:
+        data['task_signature'] = sha512(self.request.id + str(salt)).hexdigest()
+
+    requests.post(callback, json=data, verify=not insecure)
     return None
