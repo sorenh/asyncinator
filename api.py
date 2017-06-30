@@ -35,5 +35,6 @@ def root():
                          request.form.get('body', None),
                          request.form['callback'],
                          'insecure' in request.form,
-                         request.form.get('salt'))
+                         request.form.get('salt'),
+                         request.form.get('context'))
     return res.id, 201

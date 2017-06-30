@@ -22,7 +22,8 @@ app = Celery('tasks', broker=utils.redis_broker_url())
 
 
 @app.task(ignore_result=True, bind=True)
-def do(self, method, url, headers, body, callback, insecure, salt=None):
+def do(self, method, url, headers, body, callback, insecure,
+       salt=None, context=None):
     func = getattr(requests, method.lower())
     resp = func(url, headers=headers, data=body, verify=not insecure)
     data = {'task': self.request.id,
@@ -32,6 +33,9 @@ def do(self, method, url, headers, body, callback, insecure, salt=None):
 
     if salt:
         data['task_signature'] = sha512(self.request.id + str(salt)).hexdigest()
+
+    if context:
+        data['context'] = context
 
     requests.post(callback, json=data, verify=not insecure)
     return None
