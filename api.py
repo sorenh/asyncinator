@@ -33,5 +33,6 @@ def root():
                    request.form['url'],
                    json.loads(request.form.get('headers', '[]')),
                    request.form.get('body', None),
-                   request.form['callback'])
+                   request.form['callback'],
+                   'insecure' in request.form)
     return 'Ok, I will see what I can do and I will get back to you!', 201
