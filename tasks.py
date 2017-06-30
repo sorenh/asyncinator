@@ -26,6 +26,6 @@ def do(method, url, headers, body, callback, insecure):
     resp = func(url, headers=headers, data=body, verify=not insecure)
     requests.post(callback,
                   json={'status': '%s %s' % (resp.status_code, resp.reason),
-                        'headers': resp.headers,
+                        'headers': dict(resp.headers),
                         'body': resp.content}, verify=not insecure)
     return None
