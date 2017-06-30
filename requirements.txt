@@ -1,0 +1,4 @@
+gunicorn
+flask
+celery[redis]
+requests

@@ -1,0 +1,19 @@
+applications:
+- name: asyncinator
+  instances: 1
+  memory: 64M
+  disk_quota: 1024M
+  services:
+  - myredis
+  stack: cflinuxfs2
+  command: gunicorn api:app
+- name: asyncinator-bg
+  instances: 1
+  memory: 256M
+  disk_quota: 1024M
+  no-route: true
+  services:
+  - myredis
+  stack: cflinuxfs2
+  command: celery -A tasks worker
+  health-check-type: none
