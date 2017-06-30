@@ -29,10 +29,10 @@ def root():
     if request.form['method'].lower() not in ['get', 'post', 'patch', 'put']:
         return 'Invalid method', 400
 
-    tasks.do.delay(request.form['method'],
-                   request.form['url'],
-                   json.loads(request.form.get('headers', '[]')),
-                   request.form.get('body', None),
-                   request.form['callback'],
-                   'insecure' in request.form)
-    return 'Ok, I will see what I can do and I will get back to you!', 201
+    res = tasks.do.delay(request.form['method'],
+                         request.form['url'],
+                         json.loads(request.form.get('headers', '[]')),
+                         request.form.get('body', None),
+                         request.form['callback'],
+                         'insecure' in request.form)
+    return res.id, 201

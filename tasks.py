@@ -20,12 +20,13 @@ import utils
 app = Celery('tasks', broker=utils.redis_broker_url())
 
 
-@app.task
-def do(method, url, headers, body, callback, insecure):
+@app.task(ignore_result=True, bind=True)
+def do(self, method, url, headers, body, callback, insecure):
     func = getattr(requests, method.lower())
     resp = func(url, headers=headers, data=body, verify=not insecure)
     requests.post(callback,
-                  json={'status': '%s %s' % (resp.status_code, resp.reason),
+                  json={'task': self.request.id,
+                        'status': '%s %s' % (resp.status_code, resp.reason),
                         'headers': dict(resp.headers),
                         'body': resp.content}, verify=not insecure)
     return None
