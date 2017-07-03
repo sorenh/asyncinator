@@ -20,8 +20,9 @@ def redis_broker_url():
     if 'REDIS_PROVIDER' in os.environ and 'VCAP_SERVICES' in os.environ:
         services = json.loads(os.environ['VCAP_SERVICES'])
         creds = services[os.environ['REDIS_PROVIDER']][0]['credentials']
+        host = creds.get('hostname') or creds.get('host')
         broker = 'redis://:%s@%s:%s/' % (creds['password'],
-                                         creds.get('hostname') or creds.get('host'),
+                                         host,
                                          creds['port'])
     else:
         broker = 'redis://localhost:6379/'

@@ -32,7 +32,8 @@ def do(self, method, url, headers, body, callback, insecure,
             'body': resp.content}
 
     if salt:
-        data['task_signature'] = sha512(self.request.id + str(salt)).hexdigest()
+        digest = sha512(self.request.id + str(salt)).hexdigest()
+        data['task_signature'] = digest.hexdigest()
 
     if context:
         data['context'] = context
