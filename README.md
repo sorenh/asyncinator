@@ -14,7 +14,7 @@ This small service helps make things async. Pass a method, url, some headers and
 The services takes the following arguments:
 
 | Key      | Required? | What's it for?                                                                                     |
-|----------|----------------------------------------------------------------------------------------------------------------|
+|----------|-----------|----------------------------------------------------------------------------------------------------|
 | method   | Yes       | The HTTP method to use. Allowed methods are: `GET` `POST` `PUT` `PATCH`                            |
 | url      | Yes       | The URL to call                                                                                    |  
 | callback | Yes       | The URL to post the response to                                                                    |  
@@ -22,7 +22,8 @@ The services takes the following arguments:
 | body     | No        | A request body                                                                                     |  
 | insecure | No        | If set, no certificates will be verified (neither of the server specified in URL nor the callback) |
 | salt     | No        | See task_signature docs below.                                                                     |
-| context  | No        | Anything at all, really. Asyncinator will send it back to you with the callback                    |                                                                     |
+| context  | No        | Anything at all, really. Asyncinator will send it back to you with the callback                    |
+
 When given a valid request, it will respond with "201 Accepted" and a task ID in the body.
 
 ## The callback
