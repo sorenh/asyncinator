@@ -13,3 +13,5 @@ deploy:
   api: https://api.run.pivotal.io
   organization: soren-org
   space: prod
+  on:
+    python: 2.7
